@@ -26,14 +26,25 @@ class Snapper:
 
     def append(self, record):
         """Adds a new record to the data. 
+        Record must be in the form:
+        {
+            'target': <int>,
+            'data': {
+                'entry1' : <number>,
+                'entry2' : <number>,
+                ...
+                ...
+                ...
+            }
+        }
         """
         self.data.append(record)
 
 
     def export(self, filepath=None):
-        """ Exports to SVMLight format
+        """ Exports to SVMLight format.  If filepath is specified, returns
+            writes to the file.  Else returns output, as a string.
         """
-
         def getKeys(data):
             """ Internal function to generate unique keys
             """
@@ -48,7 +59,6 @@ class Snapper:
                 result[key] = i
             return result
 
-
         def exportString(data):
             """ Internal function to export to string format
             """
@@ -62,7 +72,6 @@ class Snapper:
                 resultDoc += entry
             return resultDoc
 
-
         result = exportString(self.data)
         if (filepath == None):
             return result 
@@ -70,12 +79,6 @@ class Snapper:
             f = open(filepath, 'w')
             f.write(result)
             f.close()
-
-
-
-
-
-
 
 
 
