@@ -150,8 +150,9 @@ class Snapper:
 def runMain():
     """ Main function called when run as standalone daemon
     """
-    snapper = Snapper()
-    snapper.load('datasets/bField.dataset')
+    print 'Welcome to Snapper.'
+    print 'Snapper cannot be run headless.'
+    print 'Please run Snapper from your code.'
 
 
 if __name__ == '__main__':

@@ -52,6 +52,7 @@ UI for easyNav data mining
     install_requires=[
         # add your dependencies here
         # remember to use 'package-name>=x.y.z,<x.y+1.0' notation (this way you get bugfixes)
+        'scikit-learn>=0.15.2'
     ],
     extras_require={
         'tests': tests_require,
@@ -59,7 +60,7 @@ UI for easyNav data mining
     entry_points={
         'console_scripts': [
             # add cli scripts here in this form:
-            # 'easyNav-snapper=easyNav_snapper.cli:main',
+            'easyNav-snapper=easyNav_snapper.Snapper:runMain',
         ],
     },
 )
