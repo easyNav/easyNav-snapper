@@ -9,3 +9,5 @@
 # Copyright (c) 2014 Joel Tong me@joeltong.org
 
 from easyNav_snapper.version import __version__
+from easyNav_snapper.Snapper import Snapper
+

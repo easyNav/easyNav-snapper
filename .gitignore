@@ -34,6 +34,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# Test datasets
+temp.dataset
+
 # Translations
 *.mo
 
