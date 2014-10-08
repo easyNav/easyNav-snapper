@@ -72,4 +72,65 @@ class VersionTestCase(TestCase):
         s.export('temp.dataset.exptd')
 
 
+    def test_can_train(self):
+        s = Snapper()
+        record = {
+            'target': 1,
+            'data': {
+                'fieldStrength': 20
+            }
+        }
+
+        record2 = {
+            'target': 2,
+            'data': {
+                'fieldStrength': 40,
+                'temp': 28.8
+            }
+        }
+        s.append(record)
+        s.append(record2)
+        s.append(record)
+
+        s.train()
+
+
+    def test_can_predict(self):
+        s = Snapper()
+        record = {
+            'target': 1,
+            'data': {
+                'fieldStrength': 20,
+                'temp': 28.8
+            }
+        }
+
+        record2 = {
+            'target': 2,
+            'data': {
+                'fieldStrength': 40,
+                'temp': 28.8
+            }
+        }
+        s.append(record)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record)
+
+        s.train()
+        s.predict({
+            'fieldStrength' : 25,
+            'temp': 28.8
+            })
+
+
 
