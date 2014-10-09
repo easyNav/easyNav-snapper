@@ -97,13 +97,13 @@ class Snapper:
         self.data = []
 
 
-    def train(self):
+    def train(self, neighbors):
         """ Trains the data set. 
         """
         # Create a tmp file, then remove it for SKLearn dependency purposes
         self.export('.tmp.dataset.exptd')
         x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
-        self.model = KNeighborsClassifier(n_neighbors=10)
+        self.model = KNeighborsClassifier(n_neighbors=neighbors)
         self.model.fit(x_train, y_train) 
         os.remove('.tmp.dataset.exptd')
 
@@ -137,7 +137,7 @@ class Snapper:
         """
         toTest = [self._recordToSvmRecord(features)]
         print toTest
-        print self.model.predict(toTest)
+        return self.model.predict(toTest)
 
 
 
