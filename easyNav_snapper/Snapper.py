@@ -50,6 +50,7 @@ class Snapper:
         ## Used for unique key generation
         record['uuid'] = int(uuid.uuid4())
         self.data.append(record)
+        return record
 
 
     def remove(self, id=None):
