@@ -3,6 +3,7 @@
 import pickle
 import os
 import operator
+import uuid
 
 from sklearn import datasets
 from sklearn.datasets import load_svmlight_file
@@ -46,7 +47,22 @@ class Snapper:
             }
         }
         """
+        ## Used for unique key generation
+        record['uuid'] = int(uuid.uuid4())
         self.data.append(record)
+
+
+    def remove(self, id=None):
+        """ Delete by UUID
+        """
+        if (id == None):
+            return
+
+        for item in self.data:
+            if (item['uuid'] == id):
+                self.data.remove(item)
+                return
+
 
 
     def getKeys(self, data):

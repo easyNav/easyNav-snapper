@@ -49,6 +49,25 @@ class VersionTestCase(TestCase):
         expect(s2.data[2].get('data').get('fieldStrength')).to_equal(20)
 
 
+    def test_can_delete(self):
+        s = Snapper()
+        record = {
+            'target': 1,
+            'data': {
+                'fieldStrength': 20
+            }
+        }
+        s.append(record)
+        s.append(record)
+        s.append(record)
+
+        uuidToDel = s.data[1]['uuid']
+
+        expect(len(s.data)).to_equal(3)
+        s.remove(uuidToDel)
+        expect(len(s.data)).to_equal(2)
+
+
     def test_can_export(self):
         s = Snapper()
         record = {
@@ -92,7 +111,7 @@ class VersionTestCase(TestCase):
         s.append(record2)
         s.append(record)
 
-        s.train()
+        s.train(neighbors=3)
 
 
     def test_can_predict(self):
@@ -126,7 +145,7 @@ class VersionTestCase(TestCase):
         s.append(record2)
         s.append(record)
 
-        s.train()
+        s.train(neighbors=10)
         s.predict({
             'fieldStrength' : 25,
             'temp': 28.8
