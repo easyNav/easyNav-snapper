@@ -66,9 +66,12 @@ class Snapper:
 
 
 
-    def getKeys(self, data):
+    def getKeys(self, data=None):
         """ Internal function to generate unique keys
         """
+        if (data == None):
+            data = self.data
+
         total = []
         for record in data:
             keys = list(record.get('data').keys())
@@ -78,6 +81,13 @@ class Snapper:
         result = {}
         for i, key in enumerate(total):
             result[key] = i
+
+        ## TODO: Replace this quick fix to get ordered keys
+        i = 0
+        for key in sorted(result):
+            result[key] = i
+            i += 1
+
         return result
 
 
@@ -90,11 +100,13 @@ class Snapper:
             """ Internal function to export to string format
             """
             keys = self.getKeys(self.data)
+            print ('KEYS USED: ', keys)
             resultDoc = '## SVM Light exported output ##\n'
             for record in self.data:
                 entry = str(record.get('target')) + ' '
-                for key, val in record.get('data').iteritems():
-                    entry += str(keys.get(key)) + ':' + str(val) + ' '
+                # for key, val in record.get('data').iteritems(): ## DELETE THIS
+                for key in sorted(record.get('data')):
+                    entry += str(keys.get(key)) + ':' + str(record.get('data')[key]) + ' '
                 entry += '\n'
                 resultDoc += entry
             return resultDoc
@@ -126,6 +138,7 @@ class Snapper:
 
         ## Creates keys to for predicting, later.
         self.keys = self.getKeys(self.data)
+        print ('KEYS USED: ', self.keys)
 
 
     def _recordToSvmRecord(self, features):
