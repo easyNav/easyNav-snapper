@@ -152,4 +152,42 @@ class VersionTestCase(TestCase):
             })
 
 
+    def test_svm_can_work(self):
+        s = Snapper()
+        record = {
+            'target': 1,
+            'data': {
+                'fieldStrength': 20,
+                'temp': 28.8
+            }
+        }
+
+        record2 = {
+            'target': 2,
+            'data': {
+                'fieldStrength': 40,
+                'temp': 28.8
+            }
+        }
+        s.append(record)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record2)
+        s.append(record)
+
+        s.trainSVM()
+        prediction = s.predict({
+            'fieldStrength' : 25,
+            'temp': 28.8
+            })
+
+        print 'prediction: ', prediction, '-------'
 

@@ -141,6 +141,39 @@ class Snapper:
         print ('KEYS USED: ', self.keys)
 
 
+    def trainSVM(self, C=1.0, cache_size=200,
+                class_weight=None, coef0=0.0,
+                degree=3, gamma=0.0, kernel='rbf',
+                max_iter=-1, probability=False,
+                random_state=None, shrinking=True,
+                tol=0.001, verbose=False):
+        """ Trains the data set using SVM 
+        """
+        # Create a tmp file, then remove it for SKLearn dependency purposes
+        self.export('.tmp.dataset.exptd')
+        x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
+        self.model = svm.SVC(C=C, 
+                            cache_size=cache_size, 
+                            class_weight=class_weight,
+                            coef0=coef0, 
+                            degree=degree, 
+                            gamma=gamma, 
+                            kernel=kernel, 
+                            max_iter=max_iter,
+                            probability=probability, 
+                            random_state=random_state, 
+                            shrinking=shrinking, 
+                            tol=tol, 
+                            verbose=verbose)
+        self.model.fit(x_train, y_train) 
+        os.remove('.tmp.dataset.exptd')
+
+        ## Creates keys to for predicting, later.
+        self.keys = self.getKeys(self.data)
+        print('Trained SVM classifier.')
+        print ('KEYS USED: ', self.keys)
+
+
     def _recordToSvmRecord(self, features):
         """ Converts a record to SVM Light format 
         """
@@ -168,9 +201,6 @@ class Snapper:
         toTest = [self._recordToSvmRecord(features)]
         print toTest
         return self.model.predict(toTest)
-
-
-
 
 
 ###################################
