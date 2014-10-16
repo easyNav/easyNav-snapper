@@ -17,7 +17,7 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 
 
-X, y = load_svmlight_file('./datasets/test3.svmlight')
+X, y = load_svmlight_file('./datasets/com1_2_indoors-itr1.svmlight')
 
 # Split the dataset in two equal parts
 X_train, X_test, y_train, y_test = train_test_split(
