@@ -4,6 +4,7 @@ import pickle
 import os
 import operator
 import uuid
+import random
 
 from sklearn import datasets
 from sklearn.datasets import load_svmlight_file
@@ -17,15 +18,15 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
 
 
-X, y = load_svmlight_file('./datasets/com1_2_indoors-itr1.svmlight')
+X, y = load_svmlight_file('./datasets/com1_2_itr4.svmlight')
 
 # Split the dataset in two equal parts
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.5, random_state=42)
+    X, y, test_size=0.15, random_state=random.randrange(1, 400))
 
 # Set the parameters by cross-validation
 tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
-                     'C': [1, 10, 100, 1000]},
+                     'C': [1, 10, 100, 1000], 'degree': [2,3]},
                     {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
 
 scores = ['precision', 'recall']

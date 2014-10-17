@@ -9,11 +9,12 @@ from sklearn.cross_validation import train_test_split
  
 
 # X, y = load_svmlight_file('datasets/home_2_5pt.svmlight')
-X, y = load_svmlight_file('datasets/com1_2_itr4.svmlight')
+# X, y = load_svmlight_file('datasets/com1_2_itr4.svmlight')
+X, y = load_svmlight_file('datasets/home_day_1.svmlight')
 
 # Split the dataset in two equal parts
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.15, random_state=200)
+    X, y, test_size=0.2, random_state=30)
  
  
 features = ['density', 'sulphates', 'residual_sugar']
