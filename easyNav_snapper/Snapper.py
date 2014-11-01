@@ -10,6 +10,10 @@ from sklearn.datasets import load_svmlight_file
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 
+##  for clustering
+>>> from sklearn.pipeline import Pipeline
+>>> from sklearn.cluster import FeatureAgglomeration
+
 
 
 class Snapper:
@@ -126,13 +130,27 @@ class Snapper:
         self.data = []
 
 
-    def train(self, neighbors):
-        """ Trains the data set. 
+    def makePipeline(self, classifier):
+        """Makes a pipeline, necessary for adding in unsupervised learning 
+            preprocessing step. 
+        """
+        estimators = [
+            ('reduce_dim', FeatureAgglomeration(n_clusters=5, affinity='euclidean'), 
+            ('main_classifier', classifier)
+        ]
+        clf = Pipeline(estimators)
+        return clf
+
+
+    def trainKNN(self, neighbors):
+        """ Trains the data set, using KNN
         """
         # Create a tmp file, then remove it for SKLearn dependency purposes
         self.export('.tmp.dataset.exptd')
         x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
-        self.model = KNeighborsClassifier(n_neighbors=neighbors)
+
+        classifier = KNeighborsClassifier(n_neighbors=neighbors)
+        self.model = self.makePipeline(classifier)
         self.model.fit(x_train, y_train) 
         os.remove('.tmp.dataset.exptd')
 
@@ -152,7 +170,7 @@ class Snapper:
         # Create a tmp file, then remove it for SKLearn dependency purposes
         self.export('.tmp.dataset.exptd')
         x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
-        self.model = svm.SVC(C=C, 
+        classifier = svm.SVC(C=C, 
                             cache_size=cache_size, 
                             class_weight=class_weight,
                             coef0=coef0, 
@@ -165,6 +183,7 @@ class Snapper:
                             shrinking=shrinking, 
                             tol=tol, 
                             verbose=verbose)
+        self.model = self.makePipeline(classifier)
         self.model.fit(x_train, y_train) 
         os.remove('.tmp.dataset.exptd')
 
