@@ -11,8 +11,8 @@ from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 
 ##  for clustering
->>> from sklearn.pipeline import Pipeline
->>> from sklearn.cluster import FeatureAgglomeration
+from sklearn.pipeline import Pipeline
+from sklearn.cluster import FeatureAgglomeration
 
 
 
@@ -130,19 +130,19 @@ class Snapper:
         self.data = []
 
 
-    def makePipeline(self, classifier):
+    def makePipeline(self, classifier, n_clusters):
         """Makes a pipeline, necessary for adding in unsupervised learning 
             preprocessing step. 
         """
         estimators = [
-            ('reduce_dim', FeatureAgglomeration(n_clusters=5, affinity='euclidean'), 
+            ('reduce_dim', FeatureAgglomeration(n_clusters=n_clusters, affinity='euclidean')), 
             ('main_classifier', classifier)
         ]
         clf = Pipeline(estimators)
         return clf
 
 
-    def trainKNN(self, neighbors):
+    def trainKNN(self, n_clusters, neighbors):
         """ Trains the data set, using KNN
         """
         # Create a tmp file, then remove it for SKLearn dependency purposes
@@ -150,8 +150,8 @@ class Snapper:
         x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
 
         classifier = KNeighborsClassifier(n_neighbors=neighbors)
-        self.model = self.makePipeline(classifier)
-        self.model.fit(x_train, y_train) 
+        self.model = self.makePipeline(classifier, n_clusters)
+        self.model.fit(x_train.toarray(), y_train) 
         os.remove('.tmp.dataset.exptd')
 
         ## Creates keys to for predicting, later.
@@ -159,7 +159,7 @@ class Snapper:
         print ('KEYS USED: ', self.keys)
 
 
-    def trainSVM(self, C=1.0, cache_size=200,
+    def trainSVM(self, n_clusters, C=1.0, cache_size=200,
                 class_weight=None, coef0=0.0,
                 degree=3, gamma=0.0, kernel='rbf',
                 max_iter=-1, probability=False,
@@ -183,7 +183,7 @@ class Snapper:
                             shrinking=shrinking, 
                             tol=tol, 
                             verbose=verbose)
-        self.model = self.makePipeline(classifier)
+        self.model = self.makePipeline(classifier, n_clusters)
         self.model.fit(x_train, y_train) 
         os.remove('.tmp.dataset.exptd')
 
