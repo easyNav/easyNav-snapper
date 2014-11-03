@@ -111,7 +111,7 @@ class VersionTestCase(TestCase):
         s.append(record2)
         s.append(record)
 
-        s.train(neighbors=3)
+        s.trainKNN(neighbors=3)
 
 
     def test_can_predict(self):
@@ -145,7 +145,7 @@ class VersionTestCase(TestCase):
         s.append(record2)
         s.append(record)
 
-        s.train(neighbors=10)
+        s.trainKNN(neighbors=10)
         s.predict({
             'fieldStrength' : 25,
             'temp': 28.8
@@ -190,4 +190,13 @@ class VersionTestCase(TestCase):
             })
 
         print 'prediction: ', prediction, '-------'
+
+
+
+    def test_stats_can_work(self):
+        s = Snapper()
+        s.load('easyNav_snapper/datasets/com1_2_181014_itr5.dataset')
+        # s.load('easyNav_snapper/datasets/com1_2_221014_itr1.dataset')
+        s.printStats()
+
 

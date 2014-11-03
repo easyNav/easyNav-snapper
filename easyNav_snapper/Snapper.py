@@ -4,6 +4,7 @@ import pickle
 import os
 import operator
 import uuid
+from statistics import variance
 
 from sklearn import datasets
 from sklearn.datasets import load_svmlight_file
@@ -130,6 +131,27 @@ class Snapper:
         self.data = []
 
 
+    def printStats(self):
+        self.data = sorted(self.data, key=lambda k: k['target']) 
+        categories = []
+        idx = None
+        for item in self.data:
+            if (idx != item['target']):
+                categories.append([])
+                idx = item['target']
+            categories[-1].append(item)
+
+        for cat in categories:
+            bFields = []
+            for item in cat:
+                bFields.append(item['data']['bField'])
+
+            var = variance(bFields)
+            target = str(cat[0]['target'])
+            print("Variance [ %s ]: %s" % (target, var))
+
+
+
     def makePipeline(self, classifier, n_clusters):
         """Makes a pipeline, necessary for adding in unsupervised learning 
             preprocessing step. 
@@ -142,14 +164,14 @@ class Snapper:
         return clf
 
 
-    def trainKNN(self, n_clusters, neighbors):
+    def trainKNN(self, n_clusters=2, neighbors=3):
         """ Trains the data set, using KNN
         """
         # Create a tmp file, then remove it for SKLearn dependency purposes
         self.export('.tmp.dataset.exptd')
         x_train, y_train = load_svmlight_file('.tmp.dataset.exptd')
 
-        classifier = KNeighborsClassifier(n_neighbors=neighbors)
+        classifier = KNeighborsClassifier(n_neighbors=neighbors, weights='distance')
         self.model = self.makePipeline(classifier, n_clusters)
         self.model.fit(x_train.toarray(), y_train) 
         os.remove('.tmp.dataset.exptd')
@@ -159,7 +181,7 @@ class Snapper:
         print ('KEYS USED: ', self.keys)
 
 
-    def trainSVM(self, n_clusters, C=1.0, cache_size=200,
+    def trainSVM(self, n_clusters=2, C=1.0, cache_size=200,
                 class_weight=None, coef0=0.0,
                 degree=3, gamma=0.0, kernel='rbf',
                 max_iter=-1, probability=False,
@@ -184,7 +206,7 @@ class Snapper:
                             tol=tol, 
                             verbose=verbose)
         self.model = self.makePipeline(classifier, n_clusters)
-        self.model.fit(x_train, y_train) 
+        self.model.fit(x_train.toarray(), y_train) 
         os.remove('.tmp.dataset.exptd')
 
         ## Creates keys to for predicting, later.
